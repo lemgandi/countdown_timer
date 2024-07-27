@@ -65,9 +65,9 @@ setupTimer()
 function playdate.update()
    
    if playdate.buttonIsPressed(playdate.kButtonA) then
-      NumberPictures[1]:draw(0,0)
+      Cells[1]:update(2)
    elseif playdate.buttonIsPressed(playdate.kButtonB) then
-      NumberPictures[10]:draw(0,0)
+      Cells[1]:update(1)
    end
    
 end
