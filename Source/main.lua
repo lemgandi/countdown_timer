@@ -11,34 +11,53 @@ import "CoreLibs/object"
 import "CoreLibs/graphics"
 import "CoreLibs/sprites"
 import "CoreLibs/timer"
-
+import "cell"
 
 gfx = playdate.graphics
 
-local NumWidth=75
+local NumWidth=60
 local NumHeight=75
 local Pad=5
 
-local Zero,One,Two,Three,Four,Five,Six,Seven,Eight,Nine
+
+
+NumberPictures = {
+   gfx.image.new("Images/One.png"),
+   gfx.image.new("Images/Two.png"),
+   gfx.image.new("Images/Three.png"),
+   gfx.image.new("Images/Four.png"),
+   gfx.image.new("Images/Five.png"),
+   gfx.image.new("Images/Six.png"),
+   gfx.image.new("Images/Seven.png"),
+   gfx.image.new("Images/Eight.png"),
+   gfx.image.new("Images/Nine.png"),
+   gfx.image.new("Images/Zero.png"),
+}
+
+Colon = gfx.image.new("Images/Colon.png")
+print("NumWidth*2+Pad: ",NumWidth*2+Pad)
+
+-- hh:mm:ss cells on screen
+Cells = {
+   cell.new({0}),
+   cell.new({NumWidth+Pad}),
+   cell.new({NumWidth*2+Pad}),
+   cell.new({NumWidth*3+Pad}),
+   cell.new({NumWidth*4+Pad}),
+   cell.new({NumWidth*5+Pad})
+}
 
 function setupTimer()
    
-   Zero = gfx.image.new("Images/Zero.png")
-   One  =  gfx.image.new("Images/One.png")
-   Two = gfx.image.new("Images/Two.png")
-   Three = gfx.image.new("Images/Three.png")
-   Four = gfx.image.new("Images/Four.png")
-   Five = gfx.image.new("Images/Five.png")
-   Six = gfx.image.new("Images/Six.png")
-   Seven = gfx.image.new("Images/Seven.png")
-   Eight = gfx.image.new("Images/Eight.png")
-   Nine = gfx.image.new("Images/Nine.png")
-   
-   Zero:draw(0,0)
-   Zero:draw(NumWidth+Pad,0)
-   Zero:draw(NumWidth*2+Pad,0)
-   Zero:draw(NumWidth*3+Pad,0)
-   
+   Cells[1]:draw()
+   Cells[2]:draw()
+   Colon:draw((NumWidth*2)+1,0)
+   Cells[3]:draw()
+   Cells[4]:draw()
+   Colon:draw((NumWidth*4)+1,0)   
+   Cells[5]:draw()
+   Cells[6]:draw()
+
 end
 
 setupTimer()
@@ -46,11 +65,9 @@ setupTimer()
 function playdate.update()
    
    if playdate.buttonIsPressed(playdate.kButtonA) then
-      gfx.fillRect(0,0,NumWidth+Pad,400)
-      One:draw(0,0)
+      NumberPictures[1]:draw(0,0)
    elseif playdate.buttonIsPressed(playdate.kButtonB) then
-      gfx.fillRect(0,0,NumWidth+Pad,400)
-      Zero:draw(0,0)
+      NumberPictures[10]:draw(0,0)
    end
    
 end
