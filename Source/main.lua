@@ -18,7 +18,7 @@ gfx = playdate.graphics
 local NumWidth=60
 local NumHeight=75
 local Pad=5
-
+local VPad=45
 
 
 NumberPictures = {
@@ -35,29 +35,29 @@ NumberPictures = {
 }
 
 Colon = gfx.image.new("Images/Colon.png")
-print("NumWidth*2+Pad: ",NumWidth*2+Pad)
+Selected=gfx.image.new("Images/Selected.png")
 
 -- hh:mm:ss cells on screen
 Cells = {
-   cell.new({0}),
-   cell.new({NumWidth+Pad}),
-   cell.new({NumWidth*2+Pad}),
-   cell.new({NumWidth*3+Pad}),
-   cell.new({NumWidth*4+Pad}),
-   cell.new({NumWidth*5+Pad})
+   cell.new({0,VPad}),
+   cell.new({NumWidth+Pad,VPad}),
+   cell.new({NumWidth*2+Pad,VPad}),
+   cell.new({NumWidth*3+Pad,VPad}),
+   cell.new({NumWidth*4+Pad,VPad}),
+   cell.new({NumWidth*5+Pad,VPad})
 }
 
 function setupTimer()
    
    Cells[1]:draw()
    Cells[2]:draw()
-   Colon:draw((NumWidth*2)+1,0)
+   Colon:draw((NumWidth*2)+1,VPad)
    Cells[3]:draw()
    Cells[4]:draw()
-   Colon:draw((NumWidth*4)+1,0)   
+   Colon:draw((NumWidth*4)+1,VPad)   
    Cells[5]:draw()
    Cells[6]:draw()
-
+   Cells[1]:select()
 end
 
 setupTimer()
@@ -67,7 +67,7 @@ function playdate.update()
    if playdate.buttonIsPressed(playdate.kButtonA) then
       Cells[1]:update(2)
    elseif playdate.buttonIsPressed(playdate.kButtonB) then
-      Cells[1]:update(1)
+      Cells[1]:update(10)
    end
    
 end

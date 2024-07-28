@@ -7,7 +7,8 @@
 import "CoreLibs/strict"
 
 -- references NumberPictures in main.lua
-
+gfx = playdate.graphics
+   
 cell={}
 cell.__index = cell
 
@@ -17,16 +18,16 @@ function cell.new(h)
    setmetatable(me,cell)   
    me.__index=me
    me.hPosition=h[1]
-   print("h= ",h,"New hPosition:",me.hPosition)
+   me.vPosition=h[2]
    me.currentIter=0
+   me.selected=false
    me.currentImage=NumberPictures[10]
    return me
 end
 
 -- Draw the timer cell on the screen
 function cell:draw()
-   print("currentImage: ",self.currentImage," hPosition: ",self.hPosition)
-   self.currentImage:draw(self.hPosition,0)
+   self.currentImage:draw(self.hPosition,self.vPosition)
 end
 
 -- Update the timer cell
@@ -34,4 +35,29 @@ function cell:update(currentIter)
   self.currentIter=currentIter
   self.currentImage=NumberPictures[currentIter]   
   self:draw()
+end
+
+function cell:select()
+   self.selected=true
+   local imageW,imageH
+   imageW,imageH=self.currentImage:getSize()
+   gfx.fillTriangle(self.hPosition+imageW/2,
+		    self.vPosition+imageH+2,
+		    self.hPosition,self.vPosition+imageH+40,
+		    self.hPosition+imageW,self.vPosition+imageH+40)
+   
+end
+
+function cell:unselect()
+   if self.selected then
+      self.selected=false
+      local curX,curY,curW,curH,newW,newH
+      newW,newH=self.currentImage:getSize()
+      curX,curY,curW,curH=gfx.getClipRect()
+      gfx.setScreenClipRect(self.vPosition+2,
+		      self.hPosition,
+		      newW,newH)
+      gfx.clearClipRect()
+      gfx.setScreenClipRect(curX,curY,curW,curH)      
+   end
 end
