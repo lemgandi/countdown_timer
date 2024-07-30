@@ -5,6 +5,7 @@
   23 July 2024
 
 ]]
+
 import "CoreLibs/strict"
 
 import "CoreLibs/object"
@@ -15,12 +16,13 @@ import "cell"
 
 gfx = playdate.graphics
 
+-- Size,location of cells on screen
 local NumWidth=60
 local NumHeight=75
 local Pad=5
 local VPad=45
 
-
+-- Numbers for hh:mm:ss and possibly dd
 NumberPictures = {
    gfx.image.new("Images/One.png"),
    gfx.image.new("Images/Two.png"),
@@ -47,6 +49,9 @@ Cells = {
    cell.new({NumWidth*5+Pad,VPad})
 }
 
+SelectedCell=1
+
+-- Set up before main line callback
 function setupTimer()
    
    Cells[1]:draw()
@@ -57,17 +62,51 @@ function setupTimer()
    Colon:draw((NumWidth*4)+1,VPad)   
    Cells[5]:draw()
    Cells[6]:draw()
-   Cells[1]:select()
+
+   Cells[SelectedCell]:select()
 end
+
+
+-- Bump a counter up or down, circle to a max/min value.
+function bump(updown,current,top,bottom)
+   bottom=bottom or 1
+   local retVal=current
+   
+   if updown then
+      retVal=retVal+1
+      if retVal > top then
+	 retVal=bottom
+      end      
+   else
+      retVal=retVal-1
+      if retVal < bottom then
+	 retVal=bottom
+      end
+   end
+      
+   return retVal
+end
+
+-- Main Line
 
 setupTimer()
 
+-- Update Callback
 function playdate.update()
    
-   if playdate.buttonIsPressed(playdate.kButtonA) then
-      Cells[1]:update(2)
-   elseif playdate.buttonIsPressed(playdate.kButtonB) then
-      Cells[1]:update(10)
+   if playdate.buttonJustPressed(playdate.kButtonRight) then
+      Cells[SelectedCell]:unselect()
+      SelectedCell = bump(true,SelectedCell,6)
+      print("kButtonRight " .. SelectedCell)      
+      Cells[SelectedCell]:select()
+   end
+   
+   if playdate.buttonJustPressed(playdate.kButtonLeft) then
+      Cells[SelectedCell]:unselect()
+      SelectedCell=bump(false,SelectedCell,6)
+      print("kButtonLeft " .. SelectedCell)            
+      Cells[SelectedCell]:select()
    end
    
 end
+   

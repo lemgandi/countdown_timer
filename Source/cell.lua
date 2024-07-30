@@ -37,27 +37,26 @@ function cell:update(currentIter)
   self:draw()
 end
 
-function cell:select()
-   self.selected=true
+function cell:drawSelectedTriangle(color)
    local imageW,imageH
    imageW,imageH=self.currentImage:getSize()
-   gfx.fillTriangle(self.hPosition+imageW/2,
+   local cColor=gfx.getColor()
+   gfx.setColor(color)
+   gfx.fillTriangle(self.hPosition+imageW/2,		   
 		    self.vPosition+imageH+2,
 		    self.hPosition,self.vPosition+imageH+40,
 		    self.hPosition+imageW,self.vPosition+imageH+40)
-   
+   gfx.setColor(cColor)
+end
+
+function cell:select()
+   self.selected=true
+   self:drawSelectedTriangle(gfx.kColorBlack)
 end
 
 function cell:unselect()
    if self.selected then
       self.selected=false
-      local curX,curY,curW,curH,newW,newH
-      newW,newH=self.currentImage:getSize()
-      curX,curY,curW,curH=gfx.getClipRect()
-      gfx.setScreenClipRect(self.vPosition+2,
-		      self.hPosition,
-		      newW,newH)
-      gfx.clearClipRect()
-      gfx.setScreenClipRect(curX,curY,curW,curH)      
+      self:drawSelectedTriangle(gfx.kColorWhite)
    end
 end
