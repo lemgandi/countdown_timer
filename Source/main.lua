@@ -41,12 +41,12 @@ Selected=gfx.image.new("Images/Selected.png")
 
 -- hh:mm:ss cells on screen
 Cells = {
-   cell.new({0,VPad}),
-   cell.new({NumWidth+Pad,VPad}),
-   cell.new({NumWidth*2+Pad,VPad}),
-   cell.new({NumWidth*3+Pad,VPad}),
-   cell.new({NumWidth*4+Pad,VPad}),
-   cell.new({NumWidth*5+Pad,VPad})
+   cell.new({0,VPad,9}),
+   cell.new({NumWidth+Pad,VPad,9}),
+   cell.new({NumWidth*2+Pad,VPad,5}),
+   cell.new({NumWidth*3+Pad,VPad,9}),
+   cell.new({NumWidth*4+Pad,VPad,5}),
+   cell.new({NumWidth*5+Pad,VPad,9})
 }
 
 SelectedCell=1
@@ -56,15 +56,20 @@ function setupTimer()
    
    Cells[1]:draw()
    Cells[2]:draw()
-   Colon:draw((NumWidth*2)+1,VPad)
+   Colon:draw((NumWidth*2)+2,VPad)
    Cells[3]:draw()
    Cells[4]:draw()
-   Colon:draw((NumWidth*4)+1,VPad)   
+   Colon:draw((NumWidth*4)+4,VPad)   
    Cells[5]:draw()
    Cells[6]:draw()
-
+   
    Cells[SelectedCell]:select()
 end
+
+-- Timer State table and variable
+StateT={["Setting"]=1,["Timing"]=2,["Popped"]=3}
+
+State = StateT.Setting
 
 
 -- Bump a counter up or down, circle to a max/min value.
@@ -80,12 +85,26 @@ function bump(updown,current,top,bottom)
    else
       retVal=retVal-1
       if retVal < bottom then
-	 retVal=bottom
+	 retVal=top
       end
    end
       
    return retVal
 end
+
+function findCell()
+      if playdate.buttonJustPressed(playdate.kButtonRight) then
+	 Cells[SelectedCell]:unselect()
+	 SelectedCell = bump(true,SelectedCell,6)
+	 Cells[SelectedCell]:select()      
+      elseif playdate.buttonJustPressed(playdate.kButtonLeft) then
+	 Cells[SelectedCell]:unselect()
+	 SelectedCell=bump(false,SelectedCell,6)
+	 Cells[SelectedCell]:select()
+      end
+end
+
+
 
 -- Main Line
 
@@ -93,19 +112,10 @@ setupTimer()
 
 -- Update Callback
 function playdate.update()
-   
-   if playdate.buttonJustPressed(playdate.kButtonRight) then
-      Cells[SelectedCell]:unselect()
-      SelectedCell = bump(true,SelectedCell,6)
-      print("kButtonRight " .. SelectedCell)      
-      Cells[SelectedCell]:select()
-   end
-   
-   if playdate.buttonJustPressed(playdate.kButtonLeft) then
-      Cells[SelectedCell]:unselect()
-      SelectedCell=bump(false,SelectedCell,6)
-      print("kButtonLeft " .. SelectedCell)            
-      Cells[SelectedCell]:select()
+
+   if State == StateT.Setting then
+      findCell()
+      Cells[SelectedCell]:set()
    end
    
 end
