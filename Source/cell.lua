@@ -20,10 +20,9 @@ function cell.new(h)
    me.hPosition=h[1]
    me.vPosition=h[2]
    me.topValue=h[3]
-   print("topValue: ",me.topValue,"h[3]: ",h[3])
    me.currentIter=0
    me.selected=false
-   me.currentImage=NumberPictures[10]
+   me.currentImage=NumberPictures[0]
    return me
 end
 
@@ -66,10 +65,10 @@ end
 
 function cell:set()
    if playdate.buttonJustPressed(playdate.kButtonUp) then
-      self.currentIter=bump(true,self.currentIter,self.topValue)
+      self.currentIter=bump(true,self.currentIter,self.topValue,0)
       self:update(self.currentIter)   
    elseif playdate.buttonJustPressed(playdate.kButtonDown) then
-      self.currentIter=bump(false,self.currentIter,self.topValue)
+      self.currentIter=bump(false,self.currentIter,self.topValue,0)
       self:update(self.currentIter)         
    end
 

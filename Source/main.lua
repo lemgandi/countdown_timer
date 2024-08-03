@@ -19,47 +19,50 @@ gfx = playdate.graphics
 -- Size,location of cells on screen
 local NumWidth=60
 local NumHeight=75
-local Pad=5
+local HPad=4
 local VPad=45
 
 -- Numbers for hh:mm:ss and possibly dd
-NumberPictures = {
-   gfx.image.new("Images/One.png"),
-   gfx.image.new("Images/Two.png"),
-   gfx.image.new("Images/Three.png"),
-   gfx.image.new("Images/Four.png"),
-   gfx.image.new("Images/Five.png"),
-   gfx.image.new("Images/Six.png"),
-   gfx.image.new("Images/Seven.png"),
-   gfx.image.new("Images/Eight.png"),
-   gfx.image.new("Images/Nine.png"),
-   gfx.image.new("Images/Zero.png"),
-}
+NumberPictures = {}
+NumberPictures[0] = gfx.image.new("Images/Zero.png")
+NumberPictures[1] = gfx.image.new("Images/One.png")
+NumberPictures[2] = gfx.image.new("Images/Two.png")
+NumberPictures[3] = gfx.image.new("Images/Three.png")
+NumberPictures[4] = gfx.image.new("Images/Four.png")
+NumberPictures[5] = gfx.image.new("Images/Five.png")
+NumberPictures[6] = gfx.image.new("Images/Six.png")
+NumberPictures[7] = gfx.image.new("Images/Seven.png")
+NumberPictures[8] = gfx.image.new("Images/Eight.png")
+NumberPictures[9] = gfx.image.new("Images/Nine.png")
+
 
 Colon = gfx.image.new("Images/Colon.png")
 Selected=gfx.image.new("Images/Selected.png")
 
 -- hh:mm:ss cells on screen
 Cells = {
-   cell.new({0,VPad,9}),
-   cell.new({NumWidth+Pad,VPad,9}),
-   cell.new({NumWidth*2+Pad,VPad,5}),
-   cell.new({NumWidth*3+Pad,VPad,9}),
-   cell.new({NumWidth*4+Pad,VPad,5}),
-   cell.new({NumWidth*5+Pad,VPad,9})
+   cell.new({0+HPad,VPad,9}),
+   cell.new({NumWidth+HPad,VPad,9}),
+   cell.new({(NumWidth*2)+HPad,VPad,5}),
+   cell.new({(NumWidth*3)+HPad,VPad,9}),
+   cell.new({(NumWidth*4)+HPad,VPad,5}),
+   cell.new({(NumWidth*5)+HPad,VPad,9})
 }
 
 SelectedCell=1
 
 -- Set up before main line callback
 function setupTimer()
-   
+
+   local colonW,colonH
+   colonW,colonH=Colon:getSize()
    Cells[1]:draw()
    Cells[2]:draw()
-   Colon:draw((NumWidth*2)+2,VPad)
+   
+   Colon:draw((NumWidth*2),VPad)
    Cells[3]:draw()
    Cells[4]:draw()
-   Colon:draw((NumWidth*4)+4,VPad)   
+   Colon:draw((NumWidth*4),VPad)   
    Cells[5]:draw()
    Cells[6]:draw()
    
@@ -74,16 +77,17 @@ State = StateT.Setting
 
 -- Bump a counter up or down, circle to a max/min value.
 function bump(updown,current,top,bottom)
-   bottom=bottom or 1
+   bottom = bottom or 1
+   local step = 1
    local retVal=current
    
    if updown then
-      retVal=retVal+1
+      retVal=retVal+step
       if retVal > top then
 	 retVal=bottom
       end      
    else
-      retVal=retVal-1
+      retVal=retVal-step
       if retVal < bottom then
 	 retVal=top
       end
