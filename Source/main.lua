@@ -76,11 +76,12 @@ State = StateT.Setting
 
 
 -- Bump a counter up or down, circle to a max/min value.
-function bump(updown,current,top,bottom)
+function bump(updown,current,top,bottom,step)
    bottom = bottom or 1
-   local step = 1
+   step = step or 1
    local retVal=current
-   
+
+   assert( updown ~= nil,"main.bump: Direction cannot be nil")
    if updown then
       retVal=retVal+step
       if retVal > top then

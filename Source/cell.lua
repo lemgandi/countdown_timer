@@ -5,6 +5,7 @@
 ]]
 
 import "CoreLibs/strict"
+import "CoreLibs/crank"
 
 -- references NumberPictures in main.lua
 gfx = playdate.graphics
@@ -64,12 +65,30 @@ function cell:unselect()
 end
 
 function cell:set()
-   if playdate.buttonJustPressed(playdate.kButtonUp) then
-      self.currentIter=bump(true,self.currentIter,self.topValue,0)
-      self:update(self.currentIter)   
-   elseif playdate.buttonJustPressed(playdate.kButtonDown) then
-      self.currentIter=bump(false,self.currentIter,self.topValue,0)
-      self:update(self.currentIter)         
-   end
 
+   local direction
+   
+   if playdate.buttonJustPressed(playdate.kButtonUp) then
+      direction=true
+   elseif playdate.buttonJustPressed(playdate.kButtonDown) then
+      direction=false
+   end
+   local crankTicks = playdate.getCrankTicks(20)
+   local bumpSize
+   
+   if crankTicks ~= 0 then
+      bumpSize=math.abs(crankTicks)
+      if crankTicks > 0 then
+	 direction=true
+      elseif (crankTicks < 0) then
+	 direction=false
+      end
+   end
+   
+   
+   if direction ~= nil then
+      self.currentIter=bump(direction,self.currentIter,self.topValue,0,bumpSize)
+      self:update(self.currentIter)
+   end
+   
 end
