@@ -22,6 +22,11 @@ function cell:setValue(value)
    self.currentIter=value
 end
 
+function cell:decrement()
+   self.currentIter = self.currentIter - 1
+   self:update(self.currentIter)
+end
+
 -- Create a single timer number cell
 function cell.new(h)
    local me = {}

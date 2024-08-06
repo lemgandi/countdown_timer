@@ -53,12 +53,33 @@ Cells = {
    
 }
 
--- Bump displayed time table up or down
-function Cells:incDecTime(incdec)
-   incdec = false or incdec
+-- Bump displayed time table down by second
+function Cells:decSecond()
    local carry=false
-   -- start here   
+   local cellKey=6
+   local allZero=true
+   
+   while(cellKey > 0) do
+      if self[cellKey]:getValue() > 0 then
+	 print("Decrement")
+	 self[cellKey]:decrement()
+	 carry=false
+	 allZero=false
+      else
+	 print("Carry")
+	 carry=true
+      end
+      
+      if not carry
+      then
+	 break
+      end
+      cellKey = cellKey - 1
+   end
+   
+   return allZero
 end
+
 
 SelectedCell=1
 
@@ -81,7 +102,7 @@ function setupTimer()
 end
 
 -- Timer State table and variable
-StateT={["Setting"]=1,["Timing"]=2,["Popped"]=3}
+StateT={["Setting"]=1,["Timing"]=2,["Paused"]=3,["Popped"]=4}
 
 State = StateT.Setting
 
@@ -132,6 +153,25 @@ function playdate.update()
    if State == StateT.Setting then
       findCell()
       Cells[SelectedCell]:set()
+      if playdate.buttonJustPressed(playdate.kButtonA) then
+	 print("Timing")	    
+	 State = StateT.Timing
+      end
+   end
+   
+   if State == StateT.Timing then
+      if playdate.buttonJustPressed(playdate.kButtonB) then
+	 print("Setting")
+	 State=StateT.Setting
+      elseif playdate.buttonJustPressed(playdate.kButtonDown) then
+	 local atZero
+	 print("kButtonDown")
+	 atZero = Cells:decSecond()
+	 if true == atZero then
+	    print("Zero!")
+	 end	 
+      end
+      
    end
    
 end
