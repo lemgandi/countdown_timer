@@ -19,7 +19,7 @@ clean:
 compile: $(GAME).pdx
 
 $(GAME).pdx : Source/main.lua Source/pdxinfo
-	"$(SDKBIN)/pdc" 'Source' '$(GAME).pdx'
+	"$(SDKBIN)/pdc" '-k' 'Source' '$(GAME).pdx'
 
 open:
 	$(SDKBIN)/PlaydateSimulator $(GAME).pdx

@@ -13,6 +13,15 @@ gfx = playdate.graphics
 cell={}
 cell.__index = cell
 
+function cell:getValue()
+   return self.currentIter   
+end
+
+function cell:setValue(value)
+   value = value or 0
+   self.currentIter=value
+end
+
 -- Create a single timer number cell
 function cell.new(h)
    local me = {}

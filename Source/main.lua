@@ -41,13 +41,24 @@ Selected=gfx.image.new("Images/Selected.png")
 
 -- hh:mm:ss cells on screen
 Cells = {
-   cell.new({0+HPad,VPad,9}),
-   cell.new({NumWidth+HPad,VPad,9}),
-   cell.new({(NumWidth*2)+HPad,VPad,5}),
-   cell.new({(NumWidth*3)+HPad,VPad,9}),
-   cell.new({(NumWidth*4)+HPad,VPad,5}),
-   cell.new({(NumWidth*5)+HPad,VPad,9})
+   
+   
+   cell.new({0+HPad,VPad,9}),    -- HH
+   cell.new({NumWidth+HPad,VPad,9}), -- HH
+   cell.new({(NumWidth*2)+HPad,VPad,5}), -- MM
+   cell.new({(NumWidth*3)+HPad,VPad,9}), -- MM
+   cell.new({(NumWidth*4)+HPad,VPad,5}), -- SS
+   cell.new({(NumWidth*5)+HPad,VPad,9})  -- SS
+   
+   
 }
+
+-- Bump displayed time table up or down
+function Cells:incDecTime(incdec)
+   incdec = false or incdec
+   local carry=false
+   -- start here   
+end
 
 SelectedCell=1
 
