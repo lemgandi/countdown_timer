@@ -89,6 +89,22 @@ function Cells:decSecond()
    return allZero
 end
 
+function Cells:calculateSeconds()
+   local retVal=0
+   local hhmm = {
+      360000,
+      36000,
+      600,
+      60,
+      10,
+      1
+   }
+
+   for jj,kk in ipairs(self) do
+      retVal=retVal + kk:getValue() *  hhmm[jj] 
+   end
+   return retVal   
+end
 
 SelectedCell=1
 
@@ -158,7 +174,9 @@ setupTimer()
 
 -- Update Callback
 function playdate.update()
-
+   
+   local theTimer
+   
    if State == StateT.Setting then
       findCell()
       Cells[SelectedCell]:set()
@@ -170,16 +188,19 @@ function playdate.update()
    
    if State == StateT.Timing then
       if playdate.buttonJustPressed(playdate.kButtonB) then
-	 print("Setting")
+	 print("Set")
 	 State=StateT.Setting
       elseif playdate.buttonJustPressed(playdate.kButtonDown) then
 	 local atZero
 	 atZero = Cells:decSecond()
 	 if true == atZero then
 	    print("Zero!")
+	 else
+	    local seconds
+	    seconds = Cells:calculateSeconds()
+	    print("Seconds ",seconds)
 	 end	 
-      end
-      
+      end   
    end
    
 end
