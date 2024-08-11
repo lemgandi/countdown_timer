@@ -106,7 +106,7 @@ function Cells:calculateSeconds()
    return retVal   
 end
 
-SelectedCell=1
+SelectedCell=nil
 
 -- Set up before main line callback
 function setupTimer()
@@ -122,8 +122,6 @@ function setupTimer()
    Colon:draw((NumWidth*4),VPad)   
    Cells[5]:draw()
    Cells[6]:draw()
-   
-   Cells[SelectedCell]:select()
 end
 
 -- Timer State table and variable
@@ -175,9 +173,11 @@ setupTimer()
 -- Update Callback
 function playdate.update()
    
-
-   
    if State == StateT.Setting then
+      if not SelectedCell then
+	 SelectedCell=1
+	 Cells[SelectedCell]:select()
+      end
       findCell()
       Cells[SelectedCell]:set()
       if playdate.buttonJustPressed(playdate.kButtonA) then
@@ -192,6 +192,8 @@ function playdate.update()
 	 State=StateT.Setting
       else
 	 if not TheTime then
+	    Cells[SelectedCell]:unselect()
+	    SelectedCell=nil
 	    TheTime=playdate.getSecondsSinceEpoch()
 	 else
 	    if playdate.getSecondsSinceEpoch() - TheTime >= 1
@@ -207,11 +209,11 @@ function playdate.update()
    end
    
       
-      if State == StateT.Popped then
-	 print("Popped")
-	 TheTime=nil
-	 State=StateT.Setting
-      end
+   if State == StateT.Popped then
+      print("Popped")
+      TheTime=nil
+      State=StateT.Setting
+   end
    
 end
    
