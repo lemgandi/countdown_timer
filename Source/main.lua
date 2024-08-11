@@ -130,7 +130,7 @@ end
 StateT={["Setting"]=1,["Timing"]=2,["Paused"]=3,["Popped"]=4}
 
 State = StateT.Setting
-
+TheTime=nil
 
 -- Bump a counter up or down, circle to a max/min value.
 function bump(updown,current,top,bottom,step)
@@ -175,7 +175,7 @@ setupTimer()
 -- Update Callback
 function playdate.update()
    
-   local theTimer
+
    
    if State == StateT.Setting then
       findCell()
@@ -190,18 +190,28 @@ function playdate.update()
       if playdate.buttonJustPressed(playdate.kButtonB) then
 	 print("Set")
 	 State=StateT.Setting
-      elseif playdate.buttonJustPressed(playdate.kButtonDown) then
-	 local atZero
-	 atZero = Cells:decSecond()
-	 if true == atZero then
-	    print("Zero!")
+      else
+	 if not TheTime then
+	    TheTime=playdate.getSecondsSinceEpoch()
 	 else
-	    local seconds
-	    seconds = Cells:calculateSeconds()
-	    print("Seconds ",seconds)
-	 end	 
-      end   
+	    if playdate.getSecondsSinceEpoch() - TheTime >= 1
+	    then
+	       if true == Cells:decSecond() then
+		  State = StateT.Popped
+	       else	  
+		  TheTime = playdate.getSecondsSinceEpoch()
+	       end	       
+	    end
+	 end
+      end
    end
+   
+      
+      if State == StateT.Popped then
+	 print("Popped")
+	 TheTime=nil
+	 State=StateT.Setting
+      end
    
 end
    
