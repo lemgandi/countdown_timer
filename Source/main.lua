@@ -109,9 +109,32 @@ end
 SelectedCell=nil
 
 -- Set up before main line callback
+function saveconfigCheckMark(checkState)
+   Config.alarmStop=checkState
+   saveConfig()
+end
+
+function saveConfig()
+   playdate.datastore.write(Config,nil,true)
+end
+
+function readConfig()
+   local retVal=playdate.datastore.read()
+   if retVal then
+      Config=retVal
+   end   
+end
+
+
 function setupTimer()
 
    local colonW,colonH
+   
+   readConfig()
+   local sysmenu=playdate.getSystemMenu()
+   assert(sysmenu:addCheckmarkMenuItem("Alarm Stop",Config.alarmStop,
+				       saveconfigCheckMark))
+   playdate.setAutoLockDisabled(true)
    colonW,colonH=Colon:getSize()
    Cells[1]:draw()
    Cells[2]:draw()
@@ -123,12 +146,6 @@ function setupTimer()
    Cells[5]:draw()
    Cells[6]:draw()
 end
-
--- Timer State table and variable
-StateT={["Setting"]=1,["Timing"]=2,["Paused"]=3,["Popped"]=4}
-
-State = StateT.Setting
-TheTime=nil
 
 -- Bump a counter up or down, circle to a max/min value.
 function bump(updown,current,top,bottom,step)
@@ -164,7 +181,29 @@ function findCell()
       end
 end
 
+-- Make a Noise when time is up.
+function Notify()
+   
+   assert(Config.alarmStop ~= nil)
+   
+   local duration
+   if Config.alarmStop then
+      duration=3
+   end
+   
+   Notifier:playNote(440,1,duration)         
+end
 
+-- Timer State table and variable
+StateT={["Setting"]=1,["Timing"]=2,["Paused"]=3,["Popped"]=4}
+
+State = StateT.Setting
+TheTime=nil
+Notifier=playdate.sound.synth.new(playdate.sound.kWaveSine)
+
+Config = {
+   ["alarmStop"]=true
+}
 
 -- Main Line
 
@@ -178,6 +217,11 @@ function playdate.update()
 	 SelectedCell=1
 	 Cells[SelectedCell]:select()
       end
+      if not Config.alarmStop and
+	 playdate.buttonJustPressed(playdate.kButtonB) then
+	 Notifier:noteOff()
+      end
+      
       findCell()
       Cells[SelectedCell]:set()
       if playdate.buttonJustPressed(playdate.kButtonA) then
@@ -212,7 +256,10 @@ function playdate.update()
    if State == StateT.Popped then
       print("Popped")
       TheTime=nil
+      Notify()
+      
       State=StateT.Setting
+      print("State: ",State)
    end
    
 end
