@@ -18,7 +18,7 @@ clean:
 
 compile: $(GAME).pdx
 
-$(GAME).pdx : Source/main.lua Source/pdxinfo
+$(GAME).pdx : Source/main.lua Source/cells.lua Source/cell.lua Source/pdxinfo 
 	"$(SDKBIN)/pdc" '-k' 'Source' '$(GAME).pdx'
 
 open:
