@@ -27,6 +27,11 @@ function cell:decrement()
    self:update(self.currentIter)
 end
 
+function cell:resetValueToMax()
+   self:setValue(self.topValue)
+   self:update(self.currentIter)
+end
+
 -- Create a single timer number cell
 function cell.new(h)
    local me = {}
