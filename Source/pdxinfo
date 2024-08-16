@@ -2,4 +2,5 @@ name=Timer
 author=Charles Shapiro
 description=Countdown timer for playdate
 bundleID=org.tomshiro.Timer
+imagePath=Support/Images
 version=0.0.0
