@@ -2,8 +2,21 @@
   Countdown Timer for Playdate
   
   Charles Shapiro
-  23 July 2024
+   23 July 2024
+   
+   This file is part of Playdate Timer.
+    Playdate Timer is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    Playdate Timer is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with Playdate Timer.  If not, see <http://www.gnu.org/licenses/>.
 
+   
 ]]
 
 import "CoreLibs/strict"
@@ -142,14 +155,12 @@ function playdate.update()
       findCell()
       Cells[SelectedCell]:set()
       if playdate.buttonJustPressed(playdate.kButtonA) then
-	 print("Timing")	    
 	 State = StateT.Timing
       end
    end
    
    if State == StateT.Timing then
       if playdate.buttonJustPressed(playdate.kButtonB) then
-	 print("Set")
 	 State=StateT.Setting
       else
 	 if not TheTime then
@@ -171,12 +182,11 @@ function playdate.update()
    
       
    if State == StateT.Popped then
-      print("Popped")
+
       TheTime=nil
-      Notify()
-      
+      Notify()      
       State=StateT.Setting
-      print("State: ",State)
+
    end
    
 end
