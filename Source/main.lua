@@ -44,7 +44,6 @@ function setupTimer()
    local sysmenu=playdate.getSystemMenu()
    assert(sysmenu:addCheckmarkMenuItem("Alarm Stop",Config.alarmStop,
 				       saveconfigCheckMark))
-   playdate.setAutoLockDisabled(true)
    colonW,colonH=Colon:getSize()
    Cells[1]:draw()
    Cells[2]:draw()
@@ -167,6 +166,7 @@ function playdate.update()
 	    Cells[SelectedCell]:unselect()
 	    SelectedCell=nil
 	    TheTime=playdate.getSecondsSinceEpoch()
+	    playdate.setAutoLockDisabled(true)	    
 	 else
 	    if playdate.getSecondsSinceEpoch() - TheTime >= 1
 	    then
@@ -182,7 +182,7 @@ function playdate.update()
    
       
    if State == StateT.Popped then
-
+      playdate.setAutoLockDisabled(false)
       TheTime=nil
       Notify()      
       State=StateT.Setting

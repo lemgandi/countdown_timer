@@ -19,6 +19,7 @@ clean:
 compile: $(GAME).pdx
 
 dist:
+	rm ${GAME}.zip
 	zip -r ${GAME}.zip ${GAME}.pdx/*
 
 $(GAME).pdx : Source/main.lua Source/cells.lua Source/cell.lua Source/pdxinfo 
